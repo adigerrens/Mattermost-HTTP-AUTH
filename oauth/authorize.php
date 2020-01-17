@@ -23,7 +23,7 @@ if (!$server->validateAuthorizeRequest($request, $response)) {
 if (!isset($_SESSION['uid']))
 {
   //store the authorize request
-  $explode_url=explode("/", strip_tags(trim($_SERVER['REQUEST_URI']))); 
+  $explode_url=explode("/", strip_tags(trim($_SERVER['REQUEST_URI'])));
   $_SESSION['auth_page']=end($explode_url);
   header('Location: index.php');
   exit();
@@ -31,7 +31,7 @@ if (!isset($_SESSION['uid']))
 
 
 // display an authorization form
-if (empty($_POST)) {
+if (false && empty($_POST)) {
   exit('
 <!DOCTYPE html>
 <html>
@@ -110,10 +110,11 @@ if (empty($_POST)) {
 }
 
 // print the authorization code if the user has authorized your client
-$is_authorized = ($_POST['authorized'] === 'Authorize');
+//$is_authorized = ($_POST['authorized'] === 'Authorize');
+$is_authorized = true;
 $server->handleAuthorizeRequest($request, $response, $is_authorized,$_SESSION['uid']);
 
-if ($is_authorized) 
+if ($is_authorized)
 {
   // This is only here so that you get to see your code in the cURL request. Otherwise, we'd redirect back to the client
   $code = substr($response->getHttpHeader('Location'), strpos($response->getHttpHeader('Location'), 'code=')+5, 40);
