@@ -23,7 +23,7 @@ else
   		echo 'Username has incorrect format ... Please try again<br /><br />';
 		echo 'Click <a href="./index.php">here</a> to come back to login page';
     }
-    elseif (strlen($_POST['password']) > 50 || strlen($_POST['password']) <= 7)
+    elseif (strlen($_POST['password']) > 50 || strlen($_POST['password']) <= 2)
     {
     	echo 'Password has incorrect format ... Please try again<br /><br />';
 		echo 'Click <a href="./index.php">here</a> to come back to login page';
