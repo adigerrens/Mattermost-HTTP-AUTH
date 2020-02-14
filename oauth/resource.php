@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Denis CLAVIER <clavierd at gmail dot com>
+ * @author Gawan ERRENST <gawan.errenst@aspera.com>
  * Adapted from Oauth2-server-php cookbook
  * @see    http://bshaffer.github.io/oauth2-server-php-docs/cookbook/
  */
@@ -13,33 +14,38 @@ require_once __DIR__ . '/LDAP/LDAP.php';
 require_once __DIR__ . '/LDAP/config_ldap.php';
 
 // Handle a request to a resource and authenticate the access token
-if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
+if (false && isset($_REQUEST['test_user_id'])) {
+    $user = $_REQUEST['test_user_id'];
+    $assoc_id = 0;
+} elseif (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
     $server->getResponse()->send();
     die;
+} else {
+    // get information on user associated to the token
+    $info_oauth = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
+    $user = $info_oauth["user_id"];
+    $assoc_id = intval($info_oauth["assoc_id"]);
 }
 
 // set default error message
 $resp = array("error" => "Unknown error", "message" => "An unknown error has occured, please report this bug");
-
-// get information on user associated to the token
-$info_oauth = $server->getAccessTokenData(OAuth2\Request::createFromGlobals());
-$user = $info_oauth["user_id"];
-$assoc_id = intval($info_oauth["assoc_id"]);
 
 // Open a LDAP connection
 $ldap = new LDAP($ldap_host, $ldap_port, $ldap_version);
 
 // Try to get user data on the LDAP
 try {
+    $success = false;
     foreach ($ldap_base_dn as $ldap_base_dn_entry) {
         try {
             $data = $ldap->getDataForMattermost($ldap_base_dn_entry, $ldap_filter, $ldap_bind_dn, $ldap_bind_pass, $ldap_search_attribute, $user);
         } catch (Exception $exception) {
             continue;
         }
+        $success = true;
         break;
     }
-    if (!$data) {
+    if (!$success) {
         throw new Exception('An error occured while fetching user data from LDAP.');
     }
 

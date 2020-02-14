@@ -1,11 +1,10 @@
 <?php
-
 /**
  * Simple LDAP object to interact with LDAP
  *
  * @author Denis CLAVIER <clavierd at gmail dot com>
+ * @author Gawan ERRENST <gawan.errenst@aspera.com>
  */
-
 
 require_once __DIR__ . '/LDAPInterface.php';
 
@@ -36,7 +35,7 @@ class LDAP implements LDAPInterface
         }
 
         $ldap = ldap_connect($ldap_host, $ldap_port)
-        or die("Unable to connect to the ldap server : $ldaphost ! Please check your configuration.");
+        or die("Unable to connect to the ldap server : $ldap_host ! Please check your configuration.");
 
         // Support LDAP V3 since many users have encountered difficulties with LDAP V3.
         if (is_int($ldap_version) && $ldap_version <= 3 && $ldap_version > 0) {

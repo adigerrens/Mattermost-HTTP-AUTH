@@ -1,4 +1,9 @@
 <?php
+/**
+ * @author Denis CLAVIER <clavierd at gmail dot com>
+ * @author Gawan ERRENST <gawan.errenst@aspera.com>
+ */
+
 session_start();
 
 if (!empty($_SERVER['MELLON_sAMAccountName'])) {
@@ -10,7 +15,6 @@ if (!empty($_SERVER['MELLON_sAMAccountName'])) {
         header('Location: ' . $auth_page);
     } else {
         echo "\nCongratulation you are authenticated!\n\n";
-        print_r($_SERVER);
     }
     exit;
 }

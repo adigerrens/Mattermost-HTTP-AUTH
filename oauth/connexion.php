@@ -1,8 +1,10 @@
 <?php
-session_start();
 /**
  * @author Denis CLAVIER <clavierd at gmail dot com>
+ * @author Gawan ERRENST <gawan.errenst@aspera.com>
  */
+
+session_start();
 
 // include our LDAP object
 require_once __DIR__ . '/LDAP/LDAP.php';
@@ -33,16 +35,18 @@ if (empty($_POST['user']) || empty($_POST['password'])) {
 
         // Check user credential on LDAP
         try {
+            $msg = '';
             foreach ($ldap_base_dn as $ldap_base_dn_entry) {
                 try {
                     $authenticated = $ldap->checkLogin($user, $password, $ldap_search_attribute, $ldap_filter, $ldap_base_dn_entry, $ldap_bind_dn, $ldap_bind_pass);
-                } catch (Exception $exception){
+                } catch (Exception $exception) {
+                    $msg .= '| ' . $exception->getMessage();
                     continue;
                 }
                 break;
             }
-            if(!$authenticated){
-                throw new Exception('An error occured while trying to check user login.');
+            if (!$authenticated) {
+                throw new Exception('An error occured while trying to check user login. ' . $msg);
             }
         } catch (Exception $e) {
             $resp = json_encode(array("error" => "Impossible to get data", "message" => $e->getMessage()));
